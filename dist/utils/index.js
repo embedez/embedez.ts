@@ -1,9 +1,46 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Utils = void 0;
+const __1 = require("..");
 class Utils {
+    static fetchApiSites() {
+        if (this.fetchPromise)
+            return this.fetchPromise;
+        this.fetchPromise = fetch(__1.EmbedEZ.config.url + '/api')
+            .then(response => response.json())
+            .then(data => {
+            console.info(`[EmbedEZ.ts Fetching API sites]`, data.data);
+            if (!data.success)
+                console.error(`[EmbedEZ.ts Failed to fetch API sites]`, data.message);
+            const sfwSites = data.data.sfw || ['TikTok', 'Instagram', 'Twitter', 'Reddit', 'iFunny', 'YouTube', 'Snapchat', 'Imgur', 'Facebook', 'Bilibili', 'Threads', 'Weibo'];
+            const nsfwSites = data.data.nsfw || ['Danbooru', 'Derpibooru', 'e621', 'e926', 'Gelbooru', 'Realbooru', 'Rule34xxx', 'Safebooru', 'Hypnohub', 'Konachan', 'Yandere', 'Paheal', 'Xbooru', 'TBIB'];
+            const allSites = [...sfwSites, ...nsfwSites];
+            this.apiSites = allSites.map((site) => {
+                let processedSite = site.toLowerCase();
+                if (processedSite === 'youtube')
+                    processedSite = 'youtu\\w*';
+                if (processedSite === 'twitter')
+                    processedSite = '(twitter|x\\.com)';
+                if (processedSite === 'rule34xxx')
+                    processedSite = 'rule34';
+                return processedSite.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            });
+            console.info(`[EmbedEZ.ts Fetched API sites]`, this.apiSites);
+        })
+            .catch(error => {
+            console.warn('[EmbedEZ.ts Failed to fetch API sites, using hardcoded fallback:', error);
+            this.apiSites = [];
+        });
+        return this.fetchPromise;
+    }
     checkForSocialMediaContent(input) {
-        const regex = /(tiktok|instagram|twitter|x\.com|snapchat|reddit|ifunny|youtu\w*|imgur|bsky|facebook|threads|bilibili|rule34|weibo|bluesky)/gi;
+        if (Utils.apiSites === null) {
+            Utils.fetchApiSites();
+        }
+        const apiSites = Utils.apiSites || [];
+        const allSites = [...Utils.hardcodedSites, ...apiSites];
+        const uniqueSites = [...new Set(allSites)];
+        const regex = new RegExp(`(${uniqueSites.join('|')})`, 'gi');
         const check = input.match(regex);
         return check !== null;
     }
@@ -38,4 +75,11 @@ class Utils {
     }
 }
 exports.Utils = Utils;
+Utils.apiSites = null;
+Utils.fetchPromise = null;
+Utils.hardcodedSites = [
+    'tiktok', 'instagram', 'twitter', 'x\\.com', 'snapchat', 'reddit', 'ifunny',
+    'youtu\\w*', 'imgur', 'bsky', 'facebook', 'threads', 'bilibili', 'rule34',
+    'weibo', 'bluesky', 'pinterest'
+];
 //# sourceMappingURL=index.js.map

@@ -1,10 +1,10 @@
-# EmbedEZ.ts
+# @embedez/downloader
 
-EmbedEZ.ts is a TypeScript wrapper for the EmbedEZ API, designed to simplify the integration of rich media previews into your applications. The EmbedEZ API documentation can be found [here](https://embedez.com/docs).
+@embedez/downloader is a TypeScript wrapper for the EmbedEZ API, designed to simplify the integration of rich media previews into your applications. The EmbedEZ API documentation can be found [here](https://embedez.com/docs).
 
 ## Supported Platforms
 
-EmbedEZ.ts supports retrieving posts and media from the following platforms:
+@embedez/downloader supports retrieving posts and media from the following platforms:
 - TikTok
 - Instagram
 - Twitter
@@ -17,10 +17,10 @@ EmbedEZ.ts supports retrieving posts and media from the following platforms:
 
 ## Installation
 
-To install EmbedEZ.ts, you can use npm:
+To install @embedez/downloader, you can use npm:
 
 ```bash
-npm install embedez.ts
+npm install @embedez/downloader
 ```
 
 ## Example Usage
@@ -30,7 +30,7 @@ npm install embedez.ts
 First, import EmbedEZ and configure it with your API key and API endpoint URL:
 
 ```typescript
-import { EmbedEZ } from "embedez.ts";
+import { EmbedEZ } from "@embedez/downloader";
 
 EmbedEZ.setConfig({
   apiKey: process.env.EZ_APIKEY,
@@ -40,10 +40,10 @@ EmbedEZ.setConfig({
 
 ### Using EmbedEZ Functions
 
-Here's an example of how to use EmbedEZ.ts to check for social media content, retrieve a search key, and get a media preview:
+Here's an example of how to use @embedez/downloader to check for social media content, retrieve a search key, and get a media preview:
 
 ```typescript
-import { EmbedEZ } from "embedez.ts";
+import { EmbedEZ } from "@embedez/downloader";
 
 async function test(message: string) {
   // Check if the message contains social media content
